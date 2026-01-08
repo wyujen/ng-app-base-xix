@@ -15,17 +15,19 @@ Angular Application Base — **XIX Generation**
 
 ## 🎯 設計理念（Design Philosophy）
 
+### Base 只放「通用能力」，不放業務邏輯
 
-###  Base 只放「通用能力」，不放業務邏輯
 本專案刻意 **不包含任何特定業務流程**（例如實際表單、報表、系統名稱等）。
 
 原則：
+
 - Base = 能力（Capability）
 - Feature = 業務（Business）
 
 ---
 
 ### Standalone First
+
 - 採用 **Angular Standalone Components**
 - 不使用 NgModule
 - 架構更直觀、拆分更容易、升級成本更低
@@ -33,6 +35,7 @@ Angular Application Base — **XIX Generation**
 ---
 
 ### 明確分層，避免職責混亂
+
 - 全域能力、共用元件、功能模組 **嚴格分離**
 - 不允許 feature 反向依賴 core
 
@@ -76,12 +79,14 @@ src/app/
 - 與業務無關
 
 **包含內容：**
+
 - Auth / JWT
 - HTTP Interceptor
 - Global Alert / Error handling
 - Global Signal Entity Store（如 Session、System Config）
 
 > ❗ **限制**
+>
 > - feature **不可依賴其他 feature**
 > - shared **不可依賴 core**
 
@@ -94,6 +99,7 @@ src/app/
 - 不含任何業務語意
 
 **包含內容：**
+
 - 共用 UI 元件
 - 共用 validator / utils
 - 共用 model / type
@@ -107,6 +113,7 @@ src/app/
 - 與其他 feature 低耦合
 
 **一個 feature 內可以包含：**
+
 - state（Signal Store）
 - data-access（HTTP API）
 - models
@@ -119,6 +126,7 @@ src/app/
 - 真正會出現在 Router 中的頁面
 - Base 僅提供 **最小可用頁面**（例如 login）
 - 實際業務系統可自由擴充
+
 ## ⚙️ 設定與可調整項目
 
 ### Angular 版本
@@ -141,13 +149,13 @@ src/app/
 
 ### 可選功能（Optional Features）
 
-| 功能 | 說明 | 是否預設 |
-|---|---|---|
-| Bootstrap | 排版基礎 | ✅ |
-| Angular Material | 表單元件 | ⛔ 可選 |
-| PDF（pdfmake） | PDF 輸出 | ⛔ 可選 |
-| Excel（exceljs） | Excel 匯入 / 匯出 | ⛔ 可選 |
-| Wizard Skeleton | 多步驟流程骨架 | ⛔ 可選 |
+| 功能             | 說明              | 是否預設 |
+| ---------------- | ----------------- | -------- |
+| Bootstrap        | 排版基礎          | ✅       |
+| Angular Material | 表單元件          | ⛔ 可選  |
+| PDF（pdfmake）   | PDF 輸出          | ⛔ 可選  |
+| Excel（exceljs） | Excel 匯入 / 匯出 | ⛔ 可選  |
+| Wizard Skeleton  | 多步驟流程骨架    | ⛔ 可選  |
 
 ---
 
@@ -159,10 +167,108 @@ src/app/
 npm start
 ```
 
+## 🧩 核心設定說明（必看）
+
+本專案有 **三個一定要理解、而且在新專案時會調整的設定值**：
+
+| 名稱       | 類型            | 是否需要改  | 說明                                  |
+| ---------- | --------------- | ----------- | ------------------------------------- |
+| `APP_NAME` | build-time      | ✅ 通常會改 | Angular 專案名稱（`dist/<APP_NAME>`） |
+| `SUB_URL`  | build + runtime | ✅ 一定會改 | 對外部署的子路徑（URL Path）          |
+| `API_URL`  | runtime         | ✅ 一定會改 | 後端 API 位置                         |
+
+---
+
+## 1️⃣ APP_NAME（Angular 專案名稱）
+
+### 用途
+
+- 對應 Angular build 的輸出資料夾
+- 來自 `angular.json` 的 project name
+
+### 影響範圍
+
+- `dist/<APP_NAME>/browser`
+- Docker build 時抓取 build 產物
+
+### 範例
+
+```yaml
+APP_NAME: ng-app-base-xix
+```
+
+## 2️⃣ SUB_URL（部署子路徑，最重要）
+
+### 用途
+
+`SUB_URL` 是本專案最關鍵的部署設定，同時影響多個層面：
+
+- 對外服務的 **URL Path**
+- Angular 的 `base-href`
+- Nginx 的 `location` 比對規則
+- 容器內 **實際靜態檔案放置位置**
+
+> 換句話說：  
+> **SUB_URL = 專案實際部署的「事實路徑」**
+
+---
+
+### 規則
+
+- **只填 path token**
+- **不要包含任何斜線**
+
+✅ 正確：
+
+```text
+ng-base-xix
+```
+
+實際效果：
+
+對外網址：
+
+```text
+http://host/ng-base-xix/
+```
+
+容器內檔案位置：
+
+```text
+/usr/share/nginx/html/ng-base-xix/
+```
+
+## 🐳 docker-compose 設定（必改項目）
+
+### docker-compose.yml
+
+```yaml
+version: "3.9"
+
+services:
+  frontend:
+    image: ng-app-base-xix
+    container_name: ng-app-base-xix
+    build:
+      context: .
+      args:
+        # Angular 專案名稱（dist/<APP_NAME>）
+        APP_NAME: ng-app-base-xix
+
+        # 對外子路徑（不要加斜線）
+        SUB_URL: ng-base-xix
+    ports:
+      - "31006:80"
+    environment:
+      # runtime API 設定（會產生 env.js）
+      API_URL: "https://api.example.com"
+    restart: unless-stopped
+```
+
 ## 🐳 生產部署（正式環境）
 
-> 本專案 **不直接使用 `ng build` 作為最終部署方式**。  
->  
+> 本專案 **不直接使用 `ng build` 作為最終部署方式**。
+>
 > 正式環境一律以 **Docker / docker-compose** 作為建置與部署入口。
 
 ---
@@ -184,4 +290,12 @@ npm start
 docker compose up -d
 ```
 
+## 🌐 正確存取網址
 
+本專案採用 **子路徑（Sub Path）部署**，請務必在網址最後加上 `/`。
+
+### ✅ 正確
+
+```text
+http://localhost:31006/ng-base-xix/
+```

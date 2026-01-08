@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: ng-app-base-xix
+    container_name: ng-app-base-xix
+    build:
+      context: .
+      args:
+        APP_NAME: ng-app-base-xix
+        SUB_URL: base
+    ports:
+      - "8080:80"
+    environment:
+      API_URL: "docker-compose-api-url"
+    restart: unless-stopped

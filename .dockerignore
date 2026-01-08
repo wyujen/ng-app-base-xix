@@ -1,0 +1,22 @@
+
+# Node modules (會在容器內安裝)
+node_modules
+dist
+out-tsc
+# 編譯中間產物 / 快取
+.angular
+.nx
+.tmp
+coverage
+# IDE & 作業系統垃圾檔案
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+# Git
+.git
+.gitignore
+# Log 檔
+npm-debug.log
+yarn-debug.log
+yarn-error.log

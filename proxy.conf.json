@@ -1,0 +1,8 @@
+{
+    "/api": {
+        "target": "ng-proxy-conf-api-url",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}
