@@ -1,3 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
 
-@use 'bootstrap/scss/bootstrap' as *;
+@use "bootstrap/scss/bootstrap" as *;
+
+.test {
+  background-color: #ffeb3b; /* 黃色背景，強調是測試區 */
+  border: 2px dashed #f44336; /* 虛線紅色邊框 */
+  padding: 20px;
+  margin: 20px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.test h1 {
+  color: #f44336; /* 標題顏色設為紅色 */
+  text-align: center;
+}
+
+.test .btn {
+  background-color: #f44336; /* 按鈕背景色 */
+  color: white;
+}
