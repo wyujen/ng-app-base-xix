@@ -63,6 +63,18 @@ src/app/
 │  ├─ pdf/                    # PDF 功能（可選）
 │  └─ excel/                  # Excel 功能（可選）
 │
+├─ branches/                  # Router 主幹道（Component Tree 主分支）
+│  ├─ main/                   # AppComponent 下的主幹（承載全站外框）
+│  ├─ guest/                  # 未登入分支（login / forgot...）
+│  ├─ user/                   # 一般使用者分支
+│  └─ admin/                  # 管理者分支
+│
+├─ routes/                    # 路由定義拆分（只放 Routes 常數，不放 Component）
+│  ├─ main.routes.ts
+│  ├─ guest.routes.ts
+│  ├─ user.routes.ts
+│  └─ admin.routes.ts
+│
 ├─ pages/                     # 實際頁面（login / forgot / etc）
 │
 ├─ app.component.ts
@@ -155,7 +167,7 @@ src/app/
 | Angular Material | 表單元件          | ⛔ 可選  |
 | PDF（pdfmake）   | PDF 輸出          | ⛔ 可選  |
 | Excel（exceljs） | Excel 匯入 / 匯出 | ⛔ 可選  |
-| Wizard Skeleton  | 多步驟流程骨架    | ⛔ 可選  |
+
 
 ---
 
@@ -256,9 +268,9 @@ services:
         APP_NAME: ng-app-base-xix
 
         # 對外子路徑（不要加斜線）
-        SUB_URL: ng-base-xix
+        SUB_URL: base
     ports:
-      - "31006:80"
+      - "8080:80"
     environment:
       # runtime API 設定（會產生 env.js）
       API_URL: "https://api.example.com"
