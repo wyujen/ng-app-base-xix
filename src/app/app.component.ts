@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { environment } from '../environments/environment';
+
+import { AlertStore } from './core/store/alert.store';
+
 
 @Component({
   selector: 'app-root',
@@ -10,7 +13,13 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
   title = 'ng-app-base-xix';
-  getApi(){
+  getApi() {
     console.log('api-url', environment.apiUrl)
+  }
+
+  alertS = inject(AlertStore)
+
+  openAlert() {
+    this.alertS.openAlert()
   }
 }
