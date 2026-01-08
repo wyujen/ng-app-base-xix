@@ -7,10 +7,10 @@ import { ApiResponse } from "../../shared/models/api-response.model";
 export class ProductApi extends BaseHttpService {
 
     getAll() {
-        return this.get<IProduct[]>('/products')
+        return this.get<ApiResponse<IProduct[]>>('/products')
     }
     getById(id: string) {
-        return this.get<IProduct>(`/products/${id}`);
+        return this.get<ApiResponse<IProduct[]>>(`/products/${id}`);
     }
 
     create(payload: CreateProductDto) {
@@ -20,7 +20,7 @@ export class ProductApi extends BaseHttpService {
         return this.post<ApiResponse<IProduct>>(`/products`, payload);
     }
     delete(id: string) {
-        return this.del<IProduct>(`/products/${id}`);
+        return this.del<ApiResponse<string[]>>(`/products/${id}`);
     }
 
 
