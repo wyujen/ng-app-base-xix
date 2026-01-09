@@ -309,5 +309,5 @@ docker compose up -d
 ### ✅ 正確
 
 ```text
-http://localhost:31006/ng-base-xix/
+http://localhost:8080/ng-base-xix/
 ```
