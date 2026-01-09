@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 const isDev = !environment.production;
 
 export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
